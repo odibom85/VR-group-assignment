@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;  
 
 public class Player : MonoBehaviour
 {
@@ -24,7 +25,18 @@ public class Player : MonoBehaviour
 
     void OnDestroy()
     {
+        if (_inputActions != null)
+        {
         _inputActions.Dispose();
+        }
+    }
+
+    void OnDisable()
+    {
+        if (_inputActions != null)
+        {
+            _inputActions.Disable();
+        }
     }
 
     void Update()
@@ -52,6 +64,14 @@ public class Player : MonoBehaviour
         };
         playerCharacter.UpdateInput(characterInput);
         // REMOVED: playerCharacter.UpdateBody(deltaTime);
+
+        if (input.MenuOpenClose.WasPressedThisFrame())
+        {
+            // Load scene 0 explicitly
+            SceneManager.LoadScene(0);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
 
 #if UNITY_EDITOR
     if (Keyboard.current.tKey.wasPressedThisFrame)
